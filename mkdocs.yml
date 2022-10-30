@@ -1,3 +1,98 @@
-site_name: peralog
+site_name: RABBIT HOLE
+site_url: https://27rabbitlt.github.io/
+repo_name: 27rabbitlt pages
+repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
+
 theme:
-        name: material
+  name: material
+  logo: asset/big_rabbit.ico
+  favicon: asset/big_rabbit.ico
+  features:
+    - navigation.tabs # 一级菜单在横着的导航栏
+    # - toc.integrate # 文档 toc 集成到总目录中 
+  language: 'zh'
+  palette:
+    primary: black
+    scheme: default
+  font:
+    text: 'Fira Sans'
+    code: 'Fira Mono'
+  custom_dir: overrides # 用来搞评论的，参考 https://squidfunk.github.io/mkdocs-material/setup/adding-a-comment-system/
+
+
+markdown_extensions:
+  - toc:
+      permalink: true # link for each title
+      slugify: !!python/name:pymdownx.slugs.uslugify # enable Unicode link
+  - admonition
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+google_analytics:
+  - UA-247073947-1
+  - auto
+
+extra:
+  search:
+    language: 'jp'
+  pagetime: 'on'
+  
+copyright: '本页面的全部内容在 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh">CC BY-SA 4.0</a> 和 <a href="https://github.com/zTrix/sata-license">SATA</a> 协议之条款下提供，附加条款亦可能应用'
+
+extra_css:
+  - 'from_oi_wiki/css/extra.css?v=13'
+
+extra_javascript:
+  - 'from_oi_wiki/js/extra.js?v=16'
+  - js/mathjax.js # 支持数学公式，ref : https://squidfunk.github.io/mkdocs-material/reference/mathjax
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - RABBIT: # intro/
+    - ME: index.md
+#   - C++:
+#     - C++ 学习: cpp/index.md
+#     - 快速入门 C++ 写题: cpp/cpp_for_contests.md
+#     - C++ 面向对象: 404.md
+#     - C++ 知识补充:
+#       - 理解 STL —— 迭代器与函数对象: 404.md
+#   - PL&编译: pl/index.md
+#   - 核心课: core_courses/index.md
+#   - 数学&算法: math_and_algo/index.md
+#   - 安全: security/index.md
+#   - 语言基础: lang/index.md
+#   - 其他课程: courses/index.md
+#   - 杂项: misc/index.md
