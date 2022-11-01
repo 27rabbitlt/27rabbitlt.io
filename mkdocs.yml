@@ -59,19 +59,19 @@ nav:
 - RABBIT:
   - ME: index.md
 - ALGO:
-  - ALGO: posts\ALGO\index.md
-  - MST_survey: posts\ALGO\MST_survey.md
+  - ALGO: posts/ALGO/index.md
+  - MST_survey: posts/ALGO/MST_survey.md
 - CPP:
-  - CRTP: posts\CPP\CRTP.md
-  - CPP: posts\CPP\index.md
+  - CPP: posts/CPP/index.md
+  - CRTP: posts/CPP/CRTP.md
 - Crypto:
-  - Crypto: posts\Crypto\index.md
-  - RSA: posts\Crypto\RSA.md
+  - Crypto: posts/Crypto/index.md
+  - RSA: posts/Crypto/RSA.md
 - MATH:
-  - FFT: posts\MATH\FFT.md
-  - MATH: posts\MATH\index.md
+  - MATH: posts/MATH/index.md
+  - FFT: posts/MATH/FFT.md
 - "\u5173\u4E8E":
-  - "\u5173\u4E8E": "posts\\\u5173\u4E8E\\index.md"
+  - "\u5173\u4E8E": "posts/\u5173\u4E8E/index.md"
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE
