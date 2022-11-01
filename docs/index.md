@@ -27,7 +27,9 @@ I have a wide range of interests.
 ## RABBIT HOLE
   [![website](https://img.shields.io/badge/website-19CAAD.svg?logo=data:image/svg%2bxml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+UmFiYml0TVE8L3RpdGxlPjxwYXRoIGQ9Ik0yMy4wMzUgOS42MDFoLTcuNjc3YS45NTYuOTU2IDAgMDEtLjk2Mi0uOTYyVi45NjJhLjk1Ni45NTYgMCAwMC0uOTYyLS45NTZIMTAuNTZhLjk1Ni45NTYgMCAwMC0uOTYyLjk1NlY4LjY0YS45NTYuOTU2IDAgMDEtLjk2Mi45NjJINS43NjJhLjk1Ni45NTYgMCAwMS0uOTYxLS45NjJWLjk2MkEuOTU2Ljk1NiAwIDAwMy44MzkgMEguOTU5YS45NTYuOTU2IDAgMDAtLjk1Ni45NjJ2MjIuMDc2QS45NTYuOTU2IDAgMDAuOTY1IDI0aDIyLjA3YS45NTYuOTU2IDAgMDAuOTYyLS45NjJWMTAuNThhLjk1Ni45NTYgMCAwMC0uOTYyLS45OHptLTMuODYgOC4xNTJhMS40MzcgMS40MzcgMCAwMS0xLjQzNyAxLjQ0M2gtMS45MjRhMS40MzcgMS40MzcgMCAwMS0xLjQzNi0xLjQ0M3YtMS45MTdhMS40MzcgMS40MzcgMCAwMTEuNDM2LTEuNDQzaDEuOTI0YTEuNDM3IDEuNDM3IDAgMDExLjQzNyAxLjQ0M3oiLz48L3N2Zz4=&style=for-the-badge)](https://27rabbitlt.github.io)
   
-  [![gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](27rabbitlt@gmail.com)
+  <!-- [![gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](27rabbitlt@gmail.com) -->
+
+  <a href="mailto:27rabbitlt@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>
 
   [![linkedin](https://img.shields.io/badge/TENGLIU-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/teng-liu-03473b223/)
   [![twitter](https://img.shields.io/badge/27rabbitlt-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/27rabbitlt)
