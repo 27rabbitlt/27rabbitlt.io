@@ -25,7 +25,9 @@ for dir in dirs:
     for _, _, fs in os.walk(os.path.join(rt, dir)):
         break
     for file in fs:
-        file_dict = {os.path.splitext(file)[0]: os.path.join("posts", dir, file)}
+        file_dict = {os.path.splitext(file)[0] \
+            if os.path.splitext(file)[0] != "index"\
+            else dir: os.path.join("posts", dir, file)}
         dir_list.append(file_dict)
     ayml["nav"].append(dir_dict)
 
