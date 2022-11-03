@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # MST Naive Survey
 
 ### 0 Abstract
