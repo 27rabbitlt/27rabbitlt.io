@@ -61,17 +61,20 @@ nav:
 - ALGO:
   - ALGO: posts/ALGO/index.md
   - MST_survey: posts/ALGO/MST_survey.md
-- CPP:
-  - CPP: posts/CPP/index.md
-  - CRTP: posts/CPP/CRTP.md
+  - Competitive_Contest:
+    - KMP: posts/ALGO/Competitive_Contest/KMP.md
 - Crypto:
   - Crypto: posts/Crypto/index.md
   - RSA: posts/Crypto/RSA.md
 - MATH:
   - MATH: posts/MATH/index.md
   - FFT: posts/MATH/FFT.md
+- CPP:
+  - CPP: posts/CPP/index.md
+  - CRTP: posts/CPP/CRTP.md
 - "\u5173\u4E8E":
   - "\u5173\u4E8E": "posts/\u5173\u4E8E/index.md"
+  - .order: "posts/\u5173\u4E8E/.order"
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE
