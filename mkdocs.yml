@@ -63,6 +63,7 @@ nav:
   - MST_survey: posts/ALGO/MST_survey.md
   - Competitive_Contest:
     - KMP: posts/ALGO/Competitive_Contest/KMP.md
+    - Minimize_The_Number_of_Swaps_to_Sort_List: posts/ALGO/Competitive_Contest/Minimize_The_Number_of_Swaps_to_Sort_List.md
 - Crypto:
   - Crypto: posts/Crypto/index.md
   - RSA: posts/Crypto/RSA.md

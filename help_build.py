@@ -120,7 +120,7 @@ ayml["nav"] = [default]
 
 argv_list = sys.argv[2:]
 
-dfs_find("posts", ayml["nav"], "./docs", sys.argv[1] == "order", argv_list)
+dfs_find("posts", ayml["nav"], "./docs", len(sys.argv) > 1 and sys.argv[1] == "order", argv_list)
 
 for rt, dirs, files in os.walk('./docs/posts'):
     break 
