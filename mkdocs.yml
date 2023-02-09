@@ -56,7 +56,6 @@ markdown_extensions:
     custom_checkbox: true
 - pymdownx.tilde
 nav:
-- Xmas: XmasTree.html
 - RABBIT:
   - ME: index.md
 - ALGO:
@@ -71,12 +70,18 @@ nav:
 - MATH:
   - MATH: posts/MATH/index.md
   - FFT: posts/MATH/FFT.md
+  - Combinatorial_Maths:
+    - Burnside's_Lemma: posts/MATH/Combinatorial_Maths/Burnside's_Lemma.md
+  - MISCS:
+    - "\u8FDE\u7EED, \u65B9\u5411\u5BFC\u6570\u90FD\u5B58\u5728\u4F46\u4E0D\u53EF\u5FAE": "posts/MATH/MISCS/\u8FDE\
+        \u7EED, \u65B9\u5411\u5BFC\u6570\u90FD\u5B58\u5728\u4F46\u4E0D\u53EF\u5FAE\
+        .md"
 - CPP:
   - CPP: posts/CPP/index.md
   - CRTP: posts/CPP/CRTP.md
 - "\u5173\u4E8E":
   - "\u5173\u4E8E": "posts/\u5173\u4E8E/index.md"
-  - .order: "posts/\u5173\u4E8E/.order"
+  - Courses_Discription: "posts/\u5173\u4E8E/Courses_Discription.md"
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE

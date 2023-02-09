@@ -1,4 +1,4 @@
-list = [1, 2, 3]
-with open("qwq", "w+") as f:
-    for i in list:
-        f.write(str(i) + " ")
+def pjoin(*path_list):
+    return "\\".join(path_list)
+
+print(pjoin("qwq", "lt", "lxy"))

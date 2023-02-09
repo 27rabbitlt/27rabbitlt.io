@@ -3,14 +3,13 @@ import yaml
 import sys
 
 # join the path in Unix style
-def pjoin(pa, pb):
-    return pa + "/" + pb
+def pjoin(*path_list):
+    return "/".join(path_list)
 
 # recursively list the file and generate mkdocs.yml
 # you can set the order when order = 1
 def dfs_find(fa, fa_list, pre, order, argv_list):
 
-    print(pre, fa)
     pa = pjoin(pre, fa)
 
     print ("Get into ", pa)
@@ -33,7 +32,7 @@ def dfs_find(fa, fa_list, pre, order, argv_list):
     print("order_list is: ",order_list)
     
     notin_list = list(filter(lambda t: t not in order_list, all_list))
-    notin_list = sorted(notin_list, key = lambda t : os.stat(pjoin(pa, t)).st_ctime)
+    notin_list = sorted(notin_list, key = lambda t: os.stat(pjoin(pa, t)).st_ctime)
 
     order_list = order_list + notin_list
     lenth = len(order_list)
@@ -112,7 +111,7 @@ def dfs_find(fa, fa_list, pre, order, argv_list):
 
 # 打开yml文件，读取文件数据流
 f = open("mkdocs.yml","r", encoding="utf-8")
-ayml=yaml.load(f.read(),Loader=yaml.Loader)
+ayml=yaml.load(f.read(), Loader=yaml.Loader)
 f.close()
 
 default = {'RABBIT': [{'ME': 'index.md'}]}
