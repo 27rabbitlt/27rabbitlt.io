@@ -16,7 +16,7 @@ def dfs_find(fa, fa_list, pre, order, argv_list):
 
     for _, dirs, fs in os.walk(pa):
         break
-    fs = list(filter(lambda t: t != ".order", fs))
+    fs = list(filter(lambda t: t != ".order" and t.endswith(".md"), fs))
     print("files: ", fs)
 
     all_list = []

@@ -6,7 +6,7 @@ I saw this interesting meme in QQ Zone:
 
 ![meme](infinite_loop1.png)
 
-I tested in [Godbolt](www.godbolt.org) and got exactly the same result:
+I tested in [Godbolt](https://www.godbolt.org) and got exactly the same result:
 
 ![result](infinite_loop2.jpg)
 

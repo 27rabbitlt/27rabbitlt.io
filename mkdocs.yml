@@ -79,6 +79,8 @@ nav:
 - CPP:
   - CPP: posts/CPP/index.md
   - CRTP: posts/CPP/CRTP.md
+  - UB:
+    - infinite_loop: posts/CPP/UB/infinite_loop.md
 - "\u5173\u4E8E":
   - "\u5173\u4E8E": "posts/\u5173\u4E8E/index.md"
   - Courses_Discription: "posts/\u5173\u4E8E/Courses_Discription.md"
