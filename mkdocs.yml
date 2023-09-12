@@ -1,11 +1,7 @@
-copyright: "\u672C\u9875\u9762\u7684\u5168\u90E8\u5185\u5BB9\u5728 <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.zh\"\
-  >CC BY-SA 4.0</a> \u548C <a href=\"https://github.com/zTrix/sata-license\">SATA</a>\
-  \ \u534F\u8BAE\u4E4B\u6761\u6B3E\u4E0B\u63D0\u4F9B\uFF0C\u9644\u52A0\u6761\u6B3E\
-  \u4EA6\u53EF\u80FD\u5E94\u7528"
 extra:
   pagetime: 'on'
   search:
-    language: jp
+    language: cn
 extra_css:
 - from_oi_wiki/css/extra.css?v=13
 extra_javascript:
@@ -16,7 +12,14 @@ extra_javascript:
 google_analytics:
 - UA-247073947-1
 - auto
+plugins:
+- search
+- callouts
 markdown_extensions:
+- nl2br
+- admonition
+- pymdownx.details
+- pymdownx.superfences
 - toc:
     permalink: true
     slugify: !!python/name:pymdownx.slugs.uslugify ''

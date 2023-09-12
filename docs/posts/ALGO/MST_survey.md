@@ -14,21 +14,21 @@ Another application of the minimum spanning tree problem is cluster analysis. Su
 
 We can see that the above two examples respectively correspond to adding edges and deleting edges. We will then show that both adding and deleting edges are important with respect to MST problem. They are important in finding a MST and using MST to solve a practical problem.
 ### 2 Basic Principle
-!!! note
-	**[Definition 1] Fundamental Cutset**
-	For a graph  $G$  two distinct vertices say  $i$  and  $j$ , let  $X$ be any subset of vertices that contains
-	$i$ but not  $j$ and let  $\bar{X}$ be its complement, then set  $X$ is a  $cut$ and the set of edges  $(i,j), i\in X,j\in \bar{X}, (i,j)\in E$ is called a   $cutset$ . The removal of the arcs in a   $cutset$ leaves a disconnected subgraph of  $G$ . Corresponding to each edge  $e$ of a spanning tree  $T$ of a connected graph  $G$ , there is a unique cutset called the`fundamental cutset`of the tree  $T$ with respect to edge  $e$ .
+> [!Definition]
+> **Fundamental Cutset**
+> For a graph  $G$  two distinct vertices say  $i$  and  $j$ , let  $X$ be any subset of vertices that contains $i$ but not  $j$ and let  $\bar{X}$ be its complement, then set  $X$ is a  $cut$ and the set of edges  $(i,j), i\in X,j\in \bar{X}, (i,j)\in E$ is called a   $cutset$ . 
+> The removal of the arcs in a   $cutset$ leaves a disconnected subgraph of  $G$ . Corresponding to each edge  $e$ of a spanning tree  $T$ of a connected graph  $G$ , there is a unique cutset called the `fundamental cutset` of the tree  $T$ with respect to edge  $e$ .
 
 We will then show that this definition has much to do with adding edges.
 
-!!! note
-	**[Definition 2] Fundamental Circle**
-	Given a graph  $G$ , a spanning tree  $T$ and a co-tree edge   $e=(i, j)\in E - T$ , the unique cycle in  $G$  consisting of the edge  $e$ and the edges of the unique chain in  $T$ between  $i$ and  $j$ is called
-	a`fundamental cycle`of  $G$ relative to  $T$ with respect to  $e$ .
+> [!Definition]
+> **Fundamental Circle**
+> Given a graph  $G$ , a spanning tree  $T$ and a co-tree edge   $e=(i, j)\in E - T$ , the unique cycle in  $G$  consisting of the edge  $e$ and the edges of the unique chain in  $T$ between  $i$ and  $j$ is called	a `fundamental cycle` of  $G$ relative to  $T$ with respect to  $e$ .
 
 We will then show that this definition has much to do with deleting edges.
 
-> **[Theorem 1]** **Fundamental Cut Optimality**
+> [!Theorem]
+> **Fundamental Cut Optimality**
 > A spanning tree  $T$ in a weighted graph is a MST if and only if every edge in the tree is a minimum weight edge in the`fundamental cutset`defined by that edge.  
 
 **Proof**:
