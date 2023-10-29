@@ -1,4 +1,4 @@
-import os 
+import os
 import yaml
 import sys
 
@@ -19,11 +19,12 @@ def dfs_find(fa, fa_list, pre, order, argv_list):
     fs = list(filter(lambda t: t != ".order" and t.endswith(".md"), fs))
     print("files: ", fs)
 
-    all_list = []
-    all_list = all_list + dirs
-    all_list = all_list + fs
+#    all_list = []
+#    all_list = all_list + dirs
+#    all_list = all_list + fs
+    all_list = dirs + fs
     
-    print ("all_list is: ", all_list)
+    print ("files and directories: ", all_list)
     
     order_list = []
     if (os.path.exists(pjoin(pa, ".order"))):

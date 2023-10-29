@@ -1,1 +1,1 @@
-    qwq
+Trying to be a C++ lawyer.

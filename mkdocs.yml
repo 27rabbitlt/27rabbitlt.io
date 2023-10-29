@@ -12,9 +12,6 @@ extra_javascript:
 google_analytics:
 - UA-247073947-1
 - auto
-plugins:
-- search
-- callouts
 markdown_extensions:
 - nl2br
 - admonition
@@ -67,6 +64,10 @@ nav:
   - Competitive_Contest:
     - KMP: posts/ALGO/Competitive_Contest/KMP.md
     - Minimize_The_Number_of_Swaps_to_Sort_List: posts/ALGO/Competitive_Contest/Minimize_The_Number_of_Swaps_to_Sort_List.md
+    - assets: []
+    - Connectivity - Strongly Connected Component: posts/ALGO/Competitive_Contest/Connectivity
+        - Strongly Connected Component.md
+    - Sieve of Euler: posts/ALGO/Competitive_Contest/Sieve of Euler.md
 - Crypto:
   - Crypto: posts/Crypto/index.md
   - RSA: posts/Crypto/RSA.md
@@ -76,17 +77,23 @@ nav:
   - Combinatorial_Maths:
     - Burnside's_Lemma: posts/MATH/Combinatorial_Maths/Burnside's_Lemma.md
   - MISCS:
-    - "\u8FDE\u7EED, \u65B9\u5411\u5BFC\u6570\u90FD\u5B58\u5728\u4F46\u4E0D\u53EF\u5FAE": "posts/MATH/MISCS/\u8FDE\
-        \u7EED, \u65B9\u5411\u5BFC\u6570\u90FD\u5B58\u5728\u4F46\u4E0D\u53EF\u5FAE\
-        .md"
+    - Continuous, all direction derivative exist but not differentiable: posts/MATH/MISCS/Continuous,
+        all direction derivative exist but not differentiable.md
+  - Linear_Algebra:
+    - Chpater 3: posts/MATH/Linear_Algebra/Chpater 3.md
+  - Interesting Puzzle or Paper: posts/MATH/Interesting Puzzle or Paper.md
 - CPP:
   - CPP: posts/CPP/index.md
   - CRTP: posts/CPP/CRTP.md
   - UB:
     - infinite_loop: posts/CPP/UB/infinite_loop.md
-- "\u5173\u4E8E":
-  - "\u5173\u4E8E": "posts/\u5173\u4E8E/index.md"
-  - Courses_Discription: "posts/\u5173\u4E8E/Courses_Discription.md"
+  - Further Read: posts/CPP/Further Read.md
+- About:
+  - About: posts/About/index.md
+  - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
+plugins:
+- search
+- callouts
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE
