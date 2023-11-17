@@ -55,37 +55,39 @@ markdown_extensions:
 nav:
 - RABBIT:
   - ME: index.md
-- Crypto:
-  - Crypto: posts/Crypto/index.md
-  - Zero Knowledge Proof: posts/Crypto/Zero Knowledge Proof.md
-  - RSA: posts/Crypto/RSA.md
-  - Further_Read: posts/Crypto/Further_Read.md
 - ALGO:
   - ALGO: posts/ALGO/index.md
   - MST_survey: posts/ALGO/MST_survey.md
   - Competitive_Contest:
-    - Connectivity - Strongly Connected Component: posts/ALGO/Competitive_Contest/Connectivity
-        - Strongly Connected Component.md
     - KMP: posts/ALGO/Competitive_Contest/KMP.md
     - Minimize_The_Number_of_Swaps_to_Sort_List: posts/ALGO/Competitive_Contest/Minimize_The_Number_of_Swaps_to_Sort_List.md
+    - assets: []
+    - Connectivity - Strongly Connected Component: posts/ALGO/Competitive_Contest/Connectivity
+        - Strongly Connected Component.md
     - Sieve of Euler: posts/ALGO/Competitive_Contest/Sieve of Euler.md
-- CPP:
-  - CPP: posts/CPP/index.md
-  - CRTP: posts/CPP/CRTP.md
-  - Further Read: posts/CPP/Further Read.md
-  - UB:
-    - infinite_loop: posts/CPP/UB/infinite_loop.md
+- Crypto:
+  - Crypto: posts/Crypto/index.md
+  - RSA: posts/Crypto/RSA.md
+  - attachments: []
+  - Zero Knowledge Proof: posts/Crypto/Zero Knowledge Proof.md
+  - Further_Read: posts/Crypto/Further_Read.md
 - MATH:
   - MATH: posts/MATH/index.md
   - FFT: posts/MATH/FFT.md
-  - Interesting Puzzle or Paper: posts/MATH/Interesting Puzzle or Paper.md
+  - Combinatorial_Maths:
+    - Burnside's_Lemma: posts/MATH/Combinatorial_Maths/Burnside's_Lemma.md
   - MISCS:
     - Continuous, all direction derivative exist but not differentiable: posts/MATH/MISCS/Continuous,
         all direction derivative exist but not differentiable.md
-  - Combinatorial_Maths:
-    - Burnside's_Lemma: posts/MATH/Combinatorial_Maths/Burnside's_Lemma.md
   - Linear_Algebra:
     - Chpater 3: posts/MATH/Linear_Algebra/Chpater 3.md
+  - Interesting Puzzle or Paper: posts/MATH/Interesting Puzzle or Paper.md
+- CPP:
+  - CPP: posts/CPP/index.md
+  - CRTP: posts/CPP/CRTP.md
+  - UB:
+    - infinite_loop: posts/CPP/UB/infinite_loop.md
+  - Further Read: posts/CPP/Further Read.md
 - About:
   - About: posts/About/index.md
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md

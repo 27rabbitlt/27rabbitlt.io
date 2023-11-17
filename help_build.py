@@ -1,49 +1,67 @@
 import os
+from pathlib import Path
 import yaml
 import sys
 
-# join the path in Unix style
+# join the path for path written to mkdocs.yml
+# we can't set Windows style path to mkdocs so have to use hard-code path join
 def pjoin(*path_list):
     return "/".join(path_list)
 
+# get md files under this position, position has to be a Path
+def get_mdfiles(position):
+    files = position.glob('*.md')
+    files = [item.name for item in files]
+    return files
+    
+# get directories under this position, postition has to be a Path
+# ignore some names
+dir_ignore = ["assets"]
+def get_dirs(position):
+    dirs = [item for item in position.iterdir() if item.is_dir()]
+    dirs = [item.name for item in dirs if item.name not in dir_ignore]
+    return dirs
+
 # recursively list the file and generate mkdocs.yml
 # you can set the order when order = 1
-def dfs_find(fa, fa_list, pre, order, argv_list):
+def dfs_find(cur_prefix, fa_list, cur_position, order, argv_list = None):
 
-    pa = pjoin(pre, fa)
+    print (f"\n\n[[ Get Into {cur_prefix} ]]")
 
-    print ("Get into ", pa)
-
-    for _, dirs, fs in os.walk(pa):
-        break
-    fs = list(filter(lambda t: t != ".order" and t.endswith(".md"), fs))
-    print("files: ", fs)
-
-#    all_list = []
-#    all_list = all_list + dirs
-#    all_list = all_list + fs
-    all_list = dirs + fs
+    # get md files and directories names (without parent directory path)
+    files = get_mdfiles(cur_position)
+    dirs = get_dirs(cur_position)
+    file_and_dir = files + dirs
     
-    print ("files and directories: ", all_list)
+    print ("files and directories: ", file_and_dir)
     
+    # adjust / maintain the order
+    order_path = cur_position / ".order"
     order_list = []
-    if (os.path.exists(pjoin(pa, ".order"))):
-        with open(pjoin(pa, ".order"), "r") as order_file:
-            order_list = order_file.read().split()
-    print("order_list is: ",order_list)
+    try:
+        with open(order_path, "r") as orderf:
+            order_list = orderf.read().split('\n')
+    except Exception as e:
+        pass
+
+    print("order_list is: ", order_list)
     
-    notin_list = list(filter(lambda t: t not in order_list, all_list))
-    notin_list = sorted(notin_list, key = lambda t: os.stat(pjoin(pa, t)).st_ctime)
+    # get files or dirs that are not in order list
+    notin_list = list(filter(lambda t: t not in order_list, file_and_dir))
+    notin_list = sorted(notin_list, key = lambda t: os.stat(cur_position / t).st_ctime)
 
+    # update order list
     order_list = order_list + notin_list
-    lenth = len(order_list)
-    print("#files: ", lenth)
+    order_len = len(order_list)
 
-    if (order and ((fa in argv_list) or (not argv_list))):
+    print("This is order list: ", order_list)
+
+    # modify order
+    if (order and ((cur_prefix in argv_list) or (len(argv_list) == 0))):
         while 1:
             os.system("cls")
-            new_order_list = [i for i in range(0, lenth)]
-            print("The current order of files in ", pa)
+            new_order_list = [i for i in range(0, order_len)]
+            print("The current order of files in ", cur_position.name)
             for node, cnt in enumerate(order_list):
                 print (node, cnt)
             command = input("Change the order:\n \
@@ -67,67 +85,72 @@ def dfs_find(fa, fa_list, pre, order, argv_list):
             elif (commands[0] == "sw"):
                 if (commands[1].isdigit() and commands[2].isdigit()):
                     a, b = int(commands[1]), int(commands[2])
-                    if (a >= 0 and a < lenth and b >= 0 and b < lenth):
+                    if (a >= 0 and a < order_len and b >= 0 and b < order_len):
                         order_list[a], order_list[b] = order_list[b], order_list[a]
                     
             elif (commands[0] == "up"):
                 if (commands[1].isdigit()):
                     a = int(commands[1])
-                    if (a >= 1 and a < lenth):
+                    if (a >= 1 and a < order_len):
                         order_list[a], order_list[a - 1] = order_list[a - 1], order_list[a]
 
             elif (commands[0] == "dn"):
                 if (commands[1].isdigit()):
                     a = int(commands[1])
-                    if (a >= 0 and a < lenth - 1):
+                    if (a >= 0 and a < order_len - 1):
                         order_list[a], order_list[a + 1] = order_list[a + 1], order_list[a]
             
             else:
                 if (all(t.isdigit() for t in commands)):
                     num_list = [int(t) for t in commands]
-                    counter = [t in num_list for t in range(0, lenth)]
-                    if (len(num_list) == lenth and all(t == True for t in counter)):
+                    counter = [t in num_list for t in range(0, order_len)]
+                    if (len(num_list) == order_len and all(t == True for t in counter)):
                         for i, cnt in enumerate(num_list):
                             new_order_list[cnt] = order_list[num_list[i]]
                         order_list = new_order_list
 
     for node in order_list:
-        if (os.path.isdir(pjoin(pa, node))):
+        node_path = cur_position / node
+
+        # if this is a dir, dir dict is just {dir_name: dir_list}
+        if (node_path.is_dir()):
             dir_list = []
-            dfs_find(node, dir_list, pa, order, argv_list)
+            dfs_find(pjoin(cur_prefix, node), dir_list, node_path, order, argv_list)
             dir_dict = {node: dir_list}
             fa_list.append(dir_dict)
-        if (os.path.isfile(pjoin(pa, node))):
-            file_dict = {os.path.splitext(node)[0] \
-                if os.path.splitext(node)[0] != "index"\
-                else fa: pjoin(pa, node)[7:]}
+
+        # if this is a file
+        # if index.md, {parent: node}
+        # otherwise,   {node.stem: node}
+        if (node_path.is_file()):
+            file_dict = {node_path.stem if node != "index.md" else node_path.parent.name: pjoin(cur_prefix, node)}
             if (node == "index.md"):
                 fa_list.insert(0, file_dict)
             else:
                 fa_list.append(file_dict)
-    with open(pjoin(pa, ".order"), "w+") as order_file:
-        for node in order_list:
-            order_file.write(node + " ")
+
+    # finally write updated order list back
+    with open(cur_position / ".order", "w+") as order_path:
+        order_path.write("\n".join(order_list))
 
 
 # 打开yml文件，读取文件数据流
-f = open("mkdocs.yml","r", encoding="utf-8")
-ayml=yaml.load(f.read(), Loader=yaml.Loader)
-f.close()
+with open("mkdocs.yml","r", encoding="utf-8") as f:
+    ayml=yaml.load(f.read(), Loader=yaml.Loader)
 
 default = {'RABBIT': [{'ME': 'index.md'}]}
 ayml["nav"] = [default]
 
 argv_list = sys.argv[2:]
 
-dfs_find("posts", ayml["nav"], "./docs", len(sys.argv) > 1 and sys.argv[1] == "order", argv_list)
-
-for rt, dirs, files in os.walk('./docs/posts'):
-    break 
+# current position is the Path of cwd
+# current prefix is used to for json dict {test: posts/CPP/test.md}, here posts/CPP is cur prefix
+cur_position = Path.cwd() / "docs" / "posts"
+cur_prefix = "posts"
+dfs_find(cur_prefix, ayml["nav"], cur_position, len(sys.argv) > 1 and sys.argv[1] == "order", argv_list)
 
 print (ayml["nav"])
 
-
-f = open("mkdocs.yml","w", encoding="utf-8")
-yaml.dump(ayml, f)
-f.close()
+# output ayml to file
+with open("mkdocs.yml","w", encoding="utf-8") as f:
+    yaml.dump(ayml, f)
