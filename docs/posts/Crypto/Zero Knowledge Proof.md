@@ -1,16 +1,21 @@
 感觉 ZKP 实在是很难用英文写笔记，太累了。。脑子跟不上，还是中文吧。
+
 ## Week 1 Intro & Basic Definition
+
 Interactive proof 通俗的说就是两个人聊天，一个人试图向另一个人证明自己知道一个事，但是又不想透露其中的信息。一个简单的例子是一个人试图向另一个人证明 1000000016000000063 是一个合数，但是并不想透露它能分解成哪两个数。这非常有用，它可以让你显得很厉害的同时也不会泄露信息使得别人听了之后也能显得很厉害。
 
 正经的来说，传统证明只有一个参与者，而 interactive proof 则有 prover 和 verifier 两个部分组成，比较好的刻画了很多场景，例如身份验证、区块链验证等等。prover 和 verifier 之间会进行通信，最终 verifier 会根据他所看到的内容给出最终的判断，1 表示接受，0 表示拒绝，分别对应相信/不相信对方真的知道这件事。
-
+ 
 更正经的来说，一个 interactive proof 针对的是一个 language，给定一个 instance 对双方都可见，一个 witness 仅对 prover 可见，verifier 根据 prover 发送的过往信息和 instance 以及自己的随机性给出回复；prover 根据 verifier 过往的回复和 instance、witness 以及自己的随机性给出新的回复，并循环反复直到有限步后 verifier 输出 1 或 0。
 
 一个好的 interactive proof 应该满足三个性质：
+
 + completeness
 + soundness
 + zero-knowledge
+
 这三个性质分别描述了：
+
 + completeness：如果 prover 真的知道这个知识，也即 instance 真的在 language 里，verifier 应该相信，也即输出 1。
 + soundness：如果 prover 不知道这个知识，也即 instance 并不在 language 里，verifier 不应该盲目相信，也即输出 0。
 + zero-knowledge：verifier 不应该从证明过程中获得任何『知识』。想要定义什么是知识比较困难，我们稍后讲解。
@@ -23,13 +28,88 @@ Interactive proof 通俗的说就是两个人聊天，一个人试图向另一�
 !!! note "soundness"
 	$\forall x \notin \mathcal{L}, \forall P^*, \text{Pr}_{r,s}[\langle P^*(r), V(s) \rangle (x)=0] \le \frac{1}{2}$
 
+For zero knowledge we have a brilliant idea: if verifier could produce the *proof* by itself then we can say there is zero knowledge gained by verifier. So what's the definition of the proof? A proof for verifier consists of all the *view* that verifier *sees*. If there is a **efficient** simulator $S$ such that for $\forall x \in \mathcal{L}$, we have $\{\text{View}_{V^*}^P\}=\{S(V^*,x)\}$, then we say $(P, V)$ is a perfect zero-knowledge proof, here the brace means the probability distribution.
+
+A classical example for perfect ZKP is Graph Isomorphism ZKP.
+
+图同构问题本身显然是 NP 问题，但是是否是 NP-Complete 暂时还不知道，有可能是 P 问题。这里只是举例说明什么是 zero-knowledge，实际上 IP 的计算能力是很强的。
+
+![Graph_Isomorphism](assets/zkp_GI.png)
+
+这里 Prover 将原图 $G_0$ 打乱得到 $H$ 并发送给 Verifier，然后由 Verifier 选择一个 01 随机数 $b$ 发回 Prover。如果两个图真的同构，那么不管 Verifier 的随机数是什么，Prover 都应该能找到一种排列使得 $\sigma(G_b) = H$。所以 Prover 把这个排列发送给 Verifier 去验证。
+
+如果两个图真的同构，显然这个过程会顺利通过；如果两个图不同构，那么 V 有 50% 的概率 reject（如果不同构，随机到另一个图 P 就没办法发送回正确的排列了）。所以我们就证明了这个协议的 Completeness 和 Soundness。
+
+Zero-knowledge 也是很显然的，从 V 的视角来看，他看到了 $H, b, \tau$，而他自己也可以随即打乱 $G_0$ 得到 $H$，由于这是他自己打乱的，所以 $\tau$ 也是容易得到的。故而存在一个 simulator 模拟出 V 的视角，也就证明 V 从这个证明中得不到任何信息。
+
+zero-knowledge 的定义也有一些变种：
+
+!!! note "black-box zero-knowledge"
+	If exist efficient simulator $S$ s.t. $\forall V^*, \forall x \in \mathcal{L}$, we have $\{\text{View}_{V^*}^P\} = \{S_{V^*}(x)\}$
+
+!!! note "honest verifier zero-knowledge (HVZK)"
+	If exist simulator $S$ for honest verifier $V$ s.t. $\{\text{View}_{V}^P\}=\{S(V,x)\}$ 
+
+!!! note "special/semi honest verifier zero-knowledge (SHVZK)"
+	If exist efficient simulator $S$ s.t. $\forall x \in \mathcal{L}, s \in \{0,1\}^*$, we have $\{\text{View}_{V(s)}^P\}=\{S(V(s),x)\}$
+
+Here black-box zero-knowledge is a stricter definition of zero-knowledge, and I didn't see any rationale behind this definition.
+
+HVZK means when constructing simulator, we can assume that V is honest, instead of malicious. Choosing HVZK instead of ZK doesn't mean that we already know there is some malicious V that could extract knowledge, sometimes it's just that we don't know how to prove ZK. 
+
+SHVZK stands for semi or special HVZK. **Special xxx** under this context means it's a special form of **xxx** and it's sufficient for **xxx**. We usually use SHVZK with regard of sigma protocol because in that sense SHVZK is enough for HVZK and it's easier to analyse.
+
+A classical example for HVZK is Graph 3-coloring ZKP.
+
+The protocol operates as follows:
+
++ P randomly permutates the coloring and commits it.
++ V chooses arandom edge $(i, j)$ and send this choice
++ P reveals to V only the color of $i$ and $j$
++ V checks if commitment is correct and if the colors are different.
+
+It's easy to construct simulator for honest verifier, using the similar tech in GI ZKP, but it's not trivial to analyse the malicious case. If a V is malicious, it might send $(i, j)$ while the two vertices aren't adjacent. In this case how to simulate the view of V if we don't actually know the correct coloring? So here we choose HVZK over ZK.
+
+Let us move on to another topic: **indistinguishability**.
+
++ *Perfectly indistinguishable* if for any algorithm $D$, parameter $\lambda$, $|\text{Pr}[D(1^\lambda, X) = 1] - \text{Pr}[D(1^\lambda, Y) = 1]| = 0$
++ *Statistically indistinguishable* if for any algorithm $D$, parameter $\lambda$, $|\text{Pr}[D(1^\lambda, X) = 1] - \text{Pr}[D(1^\lambda, Y) = 1]| \le \text{negl}(\lambda)$
++ *Computationally indistinguishable* if for any efficient algorithm $D$, parameter $\lambda$, $|\text{Pr}[D(1^\lambda, X) = 1] - \text{Pr}[D(1^\lambda, Y) = 1]| \le \text{negl}(\lambda)$
+
+These are three types of indistinguishability. The perfect one means the two distributions really have no difference.; the statistical one means you need to be very lucky to find some difference; the computational one means you need to be very lucky and work very hard to find some difference.
+
+Based on different indistinguishability, we can define different zero-knowledge properties: to what extent does the generated view looks like the real view.
+
+Accordingly, we have perfect one, statistical one, and computational one.
+
+Put zero-knowledge aside we have some variants of soundness.
+
+We call protocols whose soundness only holds against *efficient* provers (so we can prove soundness using cryptographic assumptions) **Interactive Arguments**. It's a strange name, we could just call it computationally sound proof system. The only difference is that we only require *computationally* soundness. In particular, perfect ZK **arguments** are known to exist for every language in NP, it is considered unlikely that perfect ZK **proofs**.
+
+Another variant is knowledge soundness, which assures when V accepts, then we can extract the witness from the messages sent by P. Note that normal soundness requirement only ensures V to know there exist a witness (because $x$ is in the language, thus a witness exists), but V can't be sure about whether P has this witness. This would not be strong enough in some cases, like login protocol.
+
+!!! note "Proof of Knowledge"
+	(adapted from https://crypto.stanford.edu/cs355/19sp/lec5.pdf, I think this definition is better than that shown in slide)
+	An IP $(P, V)$ for language $L$ is a **proof of knowledge** with **knowledge error** $\epsilon$, if there exists an efficient (expected polynomial running time) algorithm $E$, called an extractor, s.t. for every instance $x$ and every prover $P$: $\text{Pr}[(x, w) \in L: w = E^P(x)] \ge \text{Pr}[(P,V)(x)=1] - \epsilon$.
+
+Some explanations about the definition: The probability of V accepts is $\text{Pr}[(P,V)(x)=1]$ and we can always extract a correct witness except small probability (knowledge error). It doesn't matter P really knows the witness, if we can extract witness from P's messages, P itself could extract witness from messages as well. So this is our definition of "*knows*": you knows everything that you could efficiently compute.
+
+Knowledge error $\epsilon$ directly implies soundness error $\epsilon$.
+
+Now some more definitions in order to introduce sigma-protocol.
+
+We define an IP $(P, V)$ is public coin if V's messages are exactly random bits and nothing else. In this case, V's messages are also called *challenges*. For example, GI ZKP is a public coin IP because the only message sent by V is a random bit; while the trivial GNI (Graph Not Isomorphism) ZKP is not a public coin because its random bit must not be leaked otherwise P could cheat V. However, [GS1986](https://pages.cs.wisc.edu/~jyc/710/Goldwasser-Sipser.pdf) proves every language with an IP has a public coin IP, by proving public coins and private coins the same complexity class as **Probabilistic, nondeterministic, polynomial time Turing machine**.
+
+
 
 ## Week 7 Sumcheck Protocol
 ### 1 Sumcheck Protocol Itself
 这个 protocol 的 instance 是 $p(X_1, \cdots, X_l)$ over $\mathbb{F}$ 和 $u \in \mathbb{F}$，子集 $H \subset \mathbb{F}$。想要检验的是多项式 $p$ 在 $H^l$ 上求值然后全加起来是不是等于 $u$。在这里并没有 witness，那 verifier 到底想知道啥？他自己其实本来就可以验证，因为你自己把所有的值都加起来算算就知道了。但是他并不想花这么多时间，他只是想借助 prover 确认这件事是真的。
 
 这个协议是这样工作的：
+
 ![sumcheck_protocol](assets/sumcheck1.png)
+
 简单来说就是 prover 负责把后面的 $l-1$ 个变量都枚举了，相当于把多项式后面的变量都消除了，留给 verifier 自己枚举第一个变量所有可能的取值，然后检查和是不是 $u$。
 
 这样 verifier 肯定不能轻信，否则 soundness 就炸了。verifier 继续出题，那我把多项式的第一个值固定（这就是我的第一个 challenge！），这样就是一个新的多项式了，现在压力回到 prover 这边，你继续递归地用这个多项式做一下 sumcheck。
