@@ -146,7 +146,7 @@ A **commitment scheme** is a collection of 3 PPT algos (Setup, Commit, Verify) s
 
 + Setup($1^\lambda$) outputs public parameters $pp$ describing message space $M$, randomness space $R$, decommitment space $D$ and commitment space $C$.
 + Commit($pp, m \in M, r \leftarrow_\$ R$) outputs a pair $(c, d) \in C \times D$, where $c$ is the commitment, $d$ is the secret de-commitment, normally $d$ won't be sent to others unless Verify requires it.
-+ Verify($pp, c \in C, d \in D, m \in M) outputs a bit $b \in \{0, 1\}$, where $b$ is the verifying result, $0, 1$ stands for failiure and success respectively.
++ Verify($pp, c \in C, d \in D, m \in M$) outputs a bit $b \in \{0, 1\}$, where $b$ is the verifying result, $0, 1$ stands for failiure and success respectively.
 
 There are two important properties for commitment scheme: **hiding** and **binding**.
 
@@ -190,6 +190,85 @@ Consider composition of sigma-protocol, we have this table:
 |:----------:|:------------------------------------:|:-----:|
 | Sequential |                 True                 |  True |
 |  Parallel  | True for proofs; False for arguments | False |
+
+Besides, we have AND OR composition of sigma-protocol, defined as:
+
+![sigma-and](assets/zkp_sigma_and.png)
+
+![sigma-or](assets/zkp_sigma_or.png)
+
+Note that in AND composition, two sigma-protocols share one challenge; in OR composition, new protocol uses simulator to generate the response of one protocol.
+
+In OR composition, we require $x, x' \in \mathcal{L}$, it's strange at the first glance: why both input need to be in the language? Here, what we want is not just to prove $x, x'$ in language, what we want is to prove we know the witness! Also note in OR composition, P need to know whether it's $(x, w) \in R$ or $(x', w) \in R$, P needs to decide its strategy based on this (decide to simulate which one and really execute which one).
+
+!!! danger "Not Only Prove in Language, Also Prove We Know Witness"
+	In some cases, it's enough to show verifier that input is in the language, while in other cases, it's more important to show V we actually know the witness. For example, when it comes to graph isomorphism problem, it might be enough to show input is in language (i.e. the two graphs are isomorphic); while in DLOG protocol, it's trivial to show input is in language because every pair $A, G$ is in language, what's significant is that we really know the $s$ s.t. $A = s \cdot G$ !!!
+
+Completeness, special soundness and SHVZK of AND OR composition are preserved in both cases.
+
+
+
+!!! failure "TBD: need formal definition for MPC"
+
+
+
+Now let us introduce another concept: MPC (Multi Party Computation).
+
+There are multiple players want to compute a joint function of their private inputs without leaking information on the secret. Finally all players should get the output, not knowing others' secrets.
+
+MPC has many interesting and practical applications, such as: Sugar Beet Auction (https://en.wikipedia.org/wiki/Danish_Sugar_Beet_Auction), Hotel Number Adjacency (https://www.zhihu.com/question/397446056).
+
+We say an MPC protocol computes a function $f$ in semi-honest model, if it satisfies:
+
++ correctness: any player's output is correct
++ t-privacy: there exists a simulator s.t. any $t$ players get no information on others' secret.
+
+Here we are gonna use MPC in the head to construct a sigma-protocol.
+
+The idea is quite similar to Graph 3-coloring ZKP: the consistency of colors is the consistency of Views; the commitment of colors is the commitment of Views.
+
+The process is shown below:
+
+![mpc-in-the-head](assets/zkp_mpc_head.png)
+
+P has a MPC protocol in its head. After execution of MPC in its head, P commits to Views of every player in MPC and send the commitment to V. V randomly pick two players $i, j$ and ask P to open the commitment of Views of $i, j$. Fianlly V checks if commitment scheme is valid, if Views of $i, j$ are consistent, and if player $i, j$ output $1$.
+
+Analysis:
+
++ Completeness relies on correctness of MPC protocol.
++ $\binom{n}{2}$-special soundness is obvious since we can open every pair of Views, we can assure global consistency based on local consistency.
++ SHVZK comes from efficient simulator of MPC protocol (t-privacy)
+
+Now we introduce another concept: Fiat-Shamir Heuristic.
+
+A non-interactive protocol has many advantages, for example: low communication cost, no need to worry about malicous verifier, etc..
+
+In sigma-protocol, the only usage of verifiers is the generate random challenges. Why don't P generates random challenges for V and send the initial message, challenge, and the final message together, to V, just in one round? The only problem would be that V might not be convinced that P's challenge is really randomly generated instead of carefully picked? We can use a hash function to generate $c$ based on shared input $x$ and the initial message $a$. We send $a, c, z$ together to V and leave V to verify whether $z$ is a good result and whether $c$ is a valid hash of $a$ and $x$.
+
+![fiat-shamir](assets/zkp_fs.png)
+
+Actually, signature scheme works just in this way.
+
+
+!!! faliure "TBD: picnic post-quantum signature scheme"
+
+
+Now lets focus on making sigma-protocols zero-knowledge against malicious verifiers.
+
+The idea behind compiling sigma-protocol to fully ZK protocol is quite simple. If we let the challenge be controled by both P and V, then malicious V cannot construct specific challenge to break ZK property.
+
+Consider the new challenge $c''$ is the sum of $c$ and $c'$, where $c$ is provided by P and $c'$ is provided by V. If P send $c$ to V before V generates $c'$, then V could again construct any target value; but otherwise then how could V be sure P won't change $c$ afterwards? Commitment!
+
+The whole process is:
+
+![sigma_full_zk](assets/zkp_sigma_fullzk.png)
+
+
+
+
+
+
+
 
 ## Week 7 Sumcheck Protocol
 ### 1 Sumcheck Protocol Itself
