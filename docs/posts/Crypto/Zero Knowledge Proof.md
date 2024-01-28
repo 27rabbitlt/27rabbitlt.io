@@ -100,7 +100,96 @@ Now some more definitions in order to introduce sigma-protocol.
 
 We define an IP $(P, V)$ is public coin if V's messages are exactly random bits and nothing else. In this case, V's messages are also called *challenges*. For example, GI ZKP is a public coin IP because the only message sent by V is a random bit; while the trivial GNI (Graph Not Isomorphism) ZKP is not a public coin because its random bit must not be leaked otherwise P could cheat V. However, [GS1986](https://pages.cs.wisc.edu/~jyc/710/Goldwasser-Sipser.pdf) proves every language with an IP has a public coin IP, by proving public coins and private coins the same complexity class as **Probabilistic, nondeterministic, polynomial time Turing machine**.
 
+Here's another concept called **Trees of transcipts**. 
 
+An $(n_1, \cdots, n_k)$ tree of transcripts for a public coin IP is a set of $\Pi_{i=1}^{k} n_i$ transcipts arranged in a tree s.t.:
+
++ Vertices correspond to P messages.
++ Edges correspond to V challenges.
++ Each node at depth $i$ has $n_i$ child edges labelled with distinct challenges.
++ Each transcript corresponds to one root-to-leaf path.
++ The tree is *accepting* if V would accept every transcript.
+
+Finally we can define another soundness: **Special soundness**.
+
+A public coin IP is $(n_1, \cdots, n_k)$-*special sound* if exist an efficient extractor $E$ takes instance and a $(n_1, \cdots, n_k)$-tree of *accepting* transcripts and produces a witness $w$ with $(x, w) \in \mathcal{R}$.
+
+We've already known that special xxx means it's a special form of xxx, and it's sufficient for xxx. So here special soundness implies knowledge soundness, which further implies soundness.
+
+!!! note "Theorem Attema, Cramer, Kohl 2021"
+	Let $(P,V) be (n_1, \cdots, n_k)$-special sound with uniformly random V messages from set of size $N$, and $\Pi_{i=1}^k n_i$ be polynomially bounded in $|x|$. Then $(P,V)$ is knowledge sound with knowledge error: $k = \frac{N^k - \Pi_{i=1}^k(N-n_i - 1)}{N^k} \le \frac{\sum_{i=1}^k(n_i - 1)}{N}$
+
+The proof could be found here: https://eprint.iacr.org/2021/307.pdf, section 3.
+
+The results could be concluded as:
+
+|           |   Soundness   |       ZK      |
+|:---------:|:-------------:|:-------------:|
+|   Proofs  |  Perfect/Sta  | Computational |
+| Arguments | Computational |  Perfect/Sta  |
+
+## Sigma-Protocol
+
+Finally we get here, sigma-protocol.
+
+A **sigma-protocol** is an 3-move, public coin IP satisfying:
+
++ completeness with no errors
++ $k$-special soundness
++ SHZVK
+
+By definition, GI ZKP is a sigma-protocol.
+
+Now we introduce another important concept: **commitment schemes**.
+
+A **commitment scheme** is a collection of 3 PPT algos (Setup, Commit, Verify) s.t. for any parameter $\lambda$:
+
++ Setup($1^\lambda$) outputs public parameters $pp$ describing message space $M$, randomness space $R$, decommitment space $D$ and commitment space $C$.
++ Commit($pp, m \in M, r \leftarrow_\$ R$) outputs a pair $(c, d) \in C \times D$, where $c$ is the commitment, $d$ is the secret de-commitment, normally $d$ won't be sent to others unless Verify requires it.
++ Verify($pp, c \in C, d \in D, m \in M) outputs a bit $b \in \{0, 1\}$, where $b$ is the verifying result, $0, 1$ stands for failiure and success respectively.
+
+There are two important properties for commitment scheme: **hiding** and **binding**.
+
+Hiding means it's difficult to determine the original message only from the commitment. Given the commitment and public parameter, how much does the original message distribution differs from uniform distribution implies how difficult it is to extract original message from commitment and $pp$.
+
+Perfectly hiding indicates the message distribution given commitment and $pp$ is exactly the uniform distribution; computationally hiding indicates unless you work very hard (using unbounded time to crack) or very lucky (i.e. something with negelectable probability happens), you can't tell the difference, i.e. you can't extract message from commitment.
+
+Binding means it's difficult to change the message after committed. 
+
+Perfectly binding means the original message is unique; computationally binding means it needs hard work or huge luck to find another message which could generate the same commitment.
+
+Again, $\text{Perfect Hiding} \& \text{Perfect Binding} = False$.
+
+|                         | Perfect Hiding | Compuatationally Hiding |
+|:-----------------------:|:--------------:|:-----------------------:|
+|     Perfect Binding     |      False     |           True          |
+| Computationally Binding |      True      |           True          |
+
+
+Here we introduce two famous commitment scheme: Elgamal Commitment and Pedersen Commitment.
+
+![Elgamal Commitment](assets/zkp_elgamal_commitment.png)
+
+Elgamal Commitment is based on Elgamal encryption (https://en.wikipedia.org/wiki/ElGamal_encryption), so it inherits the security assumption: Decisional Deffie-Hellman assumption (https://en.wikipedia.org/wiki/Decisional_Diffie%E2%80%93Hellman_assumption).
+
+It's computationally hiding and perfectly binding.
+
+![Pedersen Commitment](assets/zkp_pederson_commitment.png)
+
+The setup is the same as Elgamal commitment, the difference lies in commit function. In Elgamal commitment, we need to send $c2 = r \cdot h$ so as to ensure $r$ won't be changed easily afterwards. If we don't send $rh$ then malicous commit-er could change $r$ to another value $r'$ and calculate corresponding $r'g$ and then eventually open a different value to original message $m$.
+
+In Pedersen commitment, however, we send $mg + rh$, and we no longer need $rh$ in this case because if we want to open another value for $m$, we have to solver DLOG to get a corresponding $g$.
+
+It's perfectly hiding and computationally binding.
+
+Sigma protocol together with commitment scheme could be used for NP-complete problem, as we've already seen: Graph 3-coloring problem.
+
+Consider composition of sigma-protocol, we have this table:
+
+| Preserved? |               Soundness              |   ZK  |
+|:----------:|:------------------------------------:|:-----:|
+| Sequential |                 True                 |  True |
+|  Parallel  | True for proofs; False for arguments | False |
 
 ## Week 7 Sumcheck Protocol
 ### 1 Sumcheck Protocol Itself
