@@ -116,10 +116,13 @@ A public coin IP is $(n_1, \cdots, n_k)$-*special sound* if exist an efficient e
 
 We've already known that special xxx means it's a special form of xxx, and it's sufficient for xxx. So here special soundness implies knowledge soundness, which further implies soundness.
 
+### Theorem Attema, Cramer, Kohl 2021
 !!! note "Theorem Attema, Cramer, Kohl 2021"
 	Let $(P,V) be (n_1, \cdots, n_k)$-special sound with uniformly random V messages from set of size $N$, and $\Pi_{i=1}^k n_i$ be polynomially bounded in $|x|$. Then $(P,V)$ is knowledge sound with knowledge error: $k = \frac{N^k - \Pi_{i=1}^k(N-n_i - 1)}{N^k} \le \frac{\sum_{i=1}^k(n_i - 1)}{N}$
 
 The proof could be found here: https://eprint.iacr.org/2021/307.pdf, section 3.
+
+The intuition for a three-step sigma-protocol is that: if the protocol is $k$-sound, then given $k$ different challenges, we can extract the witness; so if some input is not in the language (which means there doesn't exist a witness for it), then there will be at most $k - 1$ accepting challenges for this $x \notin L$, because otherwise we can extract a witness for $x$, which contradicts $x \notin L$. Thus, knowledge error won't exceed $k - 1 / |C|$ since the probability of false accepting is at most $k - 1 / |C|$.
 
 The results could be concluded as:
 
@@ -263,12 +266,82 @@ The whole process is:
 
 ![sigma_full_zk](assets/zkp_sigma_fullzk.png)
 
+Now let's look at sigma protocols from DLOG.
 
+### Schnorr Protocol
 
+First we introduce Schnorr protocol. The idea is quite simple, P tries to prove to V that it knows the discrete log of $A$ with base $G$, within a finite group.
 
+![schnorr](assets/zkp_schnorr.png)
 
+The completeness, ZK and special soundness is obvious. One thing to be noted is that we can use linear algebra way to prove its special soundness by inverting the transformation matrix.
 
+### Same DLOG Protocol
 
+Similar to Schnorr protocol, we can derive a Same DLOG protocol, which intends to show two pairs of values have the same discrete log, i.e. $A = a \cdot G, V = a \cdot U$.
+
+![same_dlog](assets/zkp_same_dlog.png)
+
+Using this idea, we can have application for mix-networks.
+
+A mix-network means given some inputs $A_1, \cdots, A_n$, someone rerandomise and shuffle the input. ZKP could be used to prove the correctness of the rerandomising and shuffling operation. Proof could guarantee operator rerandomized and shuffled correctly, but could not prove it's done randomly.
+
+Take Elgmal ciphertexts as an example, the original message is $(c_1, c_2) = (m + rH, rG)$. The rerandomization is: $(c_1, c_2) + (r'H, r'G) = (m + (r+r')H, (r+r')G)$. So we can reduce rerandomization to having same DLOG because if $(c'_1, c'_2)$ is correct rerandomization result of $(c_1, c_2)$, then $(c_1 - c'_1, c_2 - c'2)$ have the same DLOG, vice versa.
+
+Shuffling could be modeled as OR composition of sigma-protocol, so the result could be concluded as: if we want to prove $(c_1, c_2)$ and $(d_1, d_2)$ correctly rerandomized and shuffled into $(c'_1, c'_2)$ and $(d'_1, d'_2)$, we only need this composition of sigma-protocol:
+
+\begin{align}
+(c_1 - c'_1, c_2 - c'_2) \text{Same DLOG} \;\; &\textbf{AND} \;\; (d_1 - d'_1, d_2 - d'_2) \text{Same DLOG}\\
+&\textbf{OR}\\
+(c_1 - d'_1, c_2 - d'_2) \text{Same DLOG} \;\; &\textbf{AND} \;\; (d_1 - c'_1, d_2 - c'_2) \text{Same DLOG}
+\end{align}
+
+### Pedersen Protocol
+
+Now move on to another topic: Pedersen protocol.
+
+The idea is to show P knows "secret" $a, r$ s.t. $A = a \cdot G + r \cdot H$, given $G, H$. The language is trivial since every $A$ could be writen in this form, the only problem is it's hard to really find one.
+
+The process is very similar to Schnorr protocol, the only difference is that there are two group element $G, H$, while Schnorr only have one:
+
+![pedersen](assets/zkp_pedersen.png)
+
+To model/describe/abstract the similartiy, we consider a basic abstract algebra concept *homomorphism*. A map $f$ is a group homomorphism if $f(a_1) + f(a_2) = f(a_1 + a_2)$.
+
+It's easy to verify Pedersen and Elgamal commitment scheme satisfies this condition.
+
+Now we can derive a more general protocol, **Homomorphism preimage protocol**:
+
+![homopre](assets/zkp_homopre.png)
+
+### Multiplication Protocol
+
+We can get some insights about how to prove soundness of this kind of protocol.
+
+First we construct a matrix equation in this form: $X \cdot C = ...$, where $X$ denotes the challenge matrix, consisting of challenges and their powers; $C$ denotes the commit matrix, consisting of different commitments of messages, masks, etc.. The reason is that if $X$ is invertible then we multiply the inversion of $X$ to both sides and get openings of commits. By binding properties, there should only be one possible form w.h.p. ($G, H$ are analogous to linear space bases).
+
+Then we need to prove the obtained opening satisfies requirements, here the requirement is $a_1 \cdot a_2 = a_3$. We substitute the equations that V checks, and get a polynomial equation containing $x$ and $a_i$. If the equation is of degree $d$ but there are $d+1$ or more challenges $x_1, ..., x_{d+1}$ for this equation, then the polynomial must be identical to zero polynomial. Thus we can get a equation for $a_i$ by comparing the coefficients.
+
+Different rows are different branches of tree, different columns are different verifier checks.
+
+Multiplication protocol can be used to proof that values are non-zero (i.e. value is invertible, exists another value s.t. multiplication is $1$).
+
+### Low Degree Circuits
+
+Low degree circuits is an important protocol because of its application and the analysis method could be applied to other protocols.
+
+Given a circuit with N add/mul gates, the output could be represented as a polynomial, and here we only consider the case when polynomial degree is bounded by $d$.
+
+So the relation is:
+
+\begin{align}
+R_q = \Bigg\{ (\mathbb{G}, G, H, \{A_i\}_{i=1}^{l+1}, p), \{(a_i, r_i)_{i=1}^{l+1}\} : 
+ G, H, \{A_i\} \in \mathbb{G}, \{a_i, r_i\} \in \mathbb{Z}_p, A_i = a_i \cdot G + r_i \cdot H, q(a_1, \cdots, a_l) = a_{l+1} \Bigg\}
+\end{align}
+
+Obviously, multiplication protocol, Schnorr protocol are special cases of low degree circuits protocol.
+
+Completeness comes from Pedersen's completeness. SHVZK analysis is similar to multiplication protocol, all commitments are uniformly distributed except the last one could be uniquely determined.
 
 ## Week 7 Sumcheck Protocol
 ### 1 Sumcheck Protocol Itself
@@ -286,7 +359,19 @@ The whole process is:
 
 completeness 非常显然，如果 instance 本身就在 language 里，没有任何可能 verifier 会 reject。
 
-soundness 建立在『域上多项式的根的数量不会超过 degree』这一事实上。即使prover 提供了一个假的多项式骗过了第一道检查（求和之后确实等于 $u$），verifier 想要验证你提供的多项式和真实的多项式确实是同一个多项式，它的方法是在随机一个点上取值，因为随机一个点两个多项式取值相等的概率其实就是随机点是两个多项式的差的根的概率，而这个不超过 $\frac{d}{|\mathbb{F}|}$。如果不巧随机取值两个多项式的值就是一样的，那么递归的子问题就在 language 中，所以 verifier 就没办法分辨了；但是如果取值不同，那么递归的子问题的 instance 也不在 language 里，这样就很容易使用归纳法了。最终可以说明 soundness error（也就是当 instance 不在 language 的时候 verifier 依然 accept 的概率）不超过 $(l-1)d/|\mathbb{F}|$。
+soundness 建立在『域上多项式的根的数量不会超过 degree』这一事实上。即使prover 提供了一个假的多项式骗过了第一道检查（求和之后确实等于 $u$），verifier 想要验证你提供的多项式和真实的多项式确实是同一个多项式，它的方法是在随机一个点上取值，因为随机一个点两个多项式取值相等的概率其实就是随机点是两个多项式的差的根的概率，而这个不超过 $\frac{d}{|\mathbb{F}|}$。如果不巧随机取值两个多项式的值就是一样的，那么递归的子问题就在 language 中，所以 verifier 就没办法分辨了；但是如果取值不同，那么递归的子问题的 instance 也不在 language 里，这样就很容易使用归纳法了。最终可以说明 soundness error（也就是当 instance 不在 language 的时候 verifier 依然 accept 的概率）不超过  $(l-1)d/|\mathbb{F}|$。
+
+Sumcheck protocol will finally reduce the claim into a single point value of the polynomial, normally V knows the polynomial $p$ in advance, so it doesn't need P to send the coefficients, which brings lots of communication cost. While in GKR protocol, V doesn't know the exact coefficients of $p$, but it knows the formula form of $p$, so V requires some components of $p$ and then calculate the value by itself.
+
+Here is the parameters of sumcheck protocol:
+
+|        Parameters        |                  Value              |
+|:------------------------:|:-----------------------------------:|
+|     Prover Complexity    | $O(\|H\|^l)$ ops and $p$-evaluation |
+|         Soundness        |         $ld/\|\mathbb{F}\|$         |
+| Communication Complexity |               $O(ld)$               |
+|    Verifier Complexity   |             $O(ld)$ ops             |
+
 ### 2 coNP Is in IP
 coNP 里的语言满足：其补语言在 NP 中。所以概念其实很好理解。比如说图同构显然是 NP 的，你给我两个图作为 instance 和一个映射作为 witness，我很简单就能验证你说的对不对。但是图不同构就没有这么简单，你很难让我确信你给我的两个图不同构。显然图不同构的补语言就是图同构，所以图不同构是 coNP 的。
 
@@ -306,24 +391,96 @@ coNP 里的语言满足：其补语言在 NP 中。所以概念其实很好理�
 
 最终的 protocol 如下：
 ![[coNP2.png.png]]
+
 ### 3 GKR Protocol
-GKR protocol 是一个纯人名协议，真是可恶啊看不出来是干啥的。T-T
+GKR is named by initials of three authors' names 
 
 这个协议一般表述为一个运算门阵列求值问题：给定一系列 add 门和 mul 门，分别对应加法和乘法；门是层级排列的，第 $i$ 层门的输入来自两个 $i+1$ 层的门，输出输送到第 $i-1$ 层的一个门。最终 prover 想要证明某个输入 $\vec{x}$ 得到的输出为 $\vec{y}$。
 
-这个问题也是没有 witness 的，verifier 自身就可以检验输出是不是对的，只需要自行带入运算即可。这里我们想要实现的是 prover 可以比较高效的运行同时 verifier 可以超级高效的运行（输入规模的对数级别）。这个听起来非常不可思议，因为一个人居然连问题本身都没看全就能从别人那里验证结果的正确性。
+这个问题也是没有 witness 的，verifier 自身就可以检验输出是不是对的，只需要自行带入运算即可。这里我们想要实现的是 prover 可以比较高效的运行同时 verifier 可以超级高效的运行（输入规模的对数级别）。这个听起来非常不可思议，因为一个人居然连问题本身都没看全就能从别人那里验证结果的正确性。Just like the PCP theorem states, it's possible to verify a proof of $n$ bits without seeing all $n$ bits but only $O(logn)$ bits, with high probability to be correct.
 
 首先我们介绍一个引理：
 
 !!! note "Schwarz Zippel Lemma"
 	$p \in \mathbb{F}[X_1, \cdots X_l],\;\; \mathcal{S} \subset \mathbb{F}$，那么随机选一个 $\vec{x}$ 使得多项式取值为 0 的概率 $\text{Pr} \le \frac{\deg p}{|\mathcal{S}|}$。
 
+To utilize sumcheck protocol, we need to transform wire value function into summation form. To achieve this, let function $add$ and $mul$ be two indicator functions, which means if there is an *add* gate with input index $\vec{i}, \vec{j}$ and output index $\vec{c}$, then function $add(i,j,c) = 1$, otherwise the value is $0$; the idea for $mul$ is the same.
 
+In this way, for an output $w_i(c)$, we can iterate all the possible combination of input positions $w_{i+1}(a), w_{i+1}(b)$, which leads to a summation form:
 
+$$
+w_i(\vec{c}) = \sum_{\vec{a}, \vec{b}} add(\vec{a}, \vec{b}, \vec{c}) \cdot (w_{i+1}(\vec{a}) + w_{i+1}(\vec{b})) + mul(\vec{a}, \vec{b}, \vec{c}) \cdot (w_{i+1}(\vec{a}) \cdot w_{i+1}(\vec{b}))
+$$
 
+So the sumcheck form is:
 
+$$
+w_i(\vec{c}) = \sum_{\vec{a}, \vec{b}} p(\vec{a}, \vec{b})
+$$
 
+The protocol works in three steps.
 
+**Firstly**, the final output is a vector, but all the tools that we have are about polynomial, so we construct MLE for wire value $w$ and for output within the instance, $y$. $y$ is known to both sides, so V chooses a random point $r_0$, and our first claim is: $w(r_0) = y(r_0)$, where $w, y$ are MLEs.
+
+**The second step** is to use sumcheck protocol to prove our claim $w(r_i) = y(r_i) = v_{i}$.
+
+Finally sumcheck protocol will reduce the claim to a single point value of $p$. Say V chooses $\vec{r_a}, \vec{r_b}$ as random point and P need to send back $A = w_{i+1}(\vec{r_a})$ and $B = w_{i+1}(\vec{r_b})$. Then V can calculate $p(\vec{r_a}, \vec{r_b})$ by itself.
+
+Then how to make sure P sends the correct value for $A = w_{i+1}(\vec{r_a})$ and $B = w_{i+1}(\vec{r_b})$? So we naturally get another two claims about next level's wire value. But if so, one claim reduced to two claims, two claims reduced to four claims, so on and so forth, there will be too many claims. Thus we need to reduce two claims to single claim.
+
+**The third step**, reduce two claims to one claim. $\vec{a}$ and $\vec{b}$ are two points, then $L(t) = \vec{a} \cdot t + \vec{b} \cdot (1 - t)$ is a segment (or line) where $t$ is the only variable. P sends $Q(t) = w_{i+1}(Q(t))$ to V, because $Q(t)$ only has one variable and of degree $l_{i+1}$ so won't cost too much for communication. V checks if $Q(0) == A$ and $Q(1) == B$, if so V again choose a random value $t$ in $\mathbb{F}$, the reduced claim is then: $w_{i+1}(L(t)) == Q(t) = v_{i+1}$. Here the RHS, $Q(t)$, and $L(t)$ are calculated by both P and V, so we go back to second step with one more level down: $w_{i+1}(r_{i+1}) = v_{i+1}$.
+
+Finally and finally, protocol will reduce claim to final final claim $w_{D}(r_D) = v_{D}$, and this could be easily verified since $w_{D}$ should be input and it's in instance so V already knows it.
+
+All parameters of full GKR protocol concluded as:
+
+![gkr](assets/zkp_gkr.png)
+
+Completeness of this kind of protocol is actually obvious. If we have to give a rigorous proof, then we only need to show protocol reduces true claim to true claims and checks pass finally. Also note to use uniqueness of MLEs to show two MLEs of the same polynomial are identical. Identical MLEs must have equality even outside subset $H$, so we can safely use the point in whole finite field.
+
+To show soundness, the idea is similar: we prove protocol reduces false claim to false claim or check fails, with high probability.
+
+## IOP, PCP and R1CS
+
+R1CS looks strange, the formal definition of this relation is:
+
+$$
+R_{R1CS} = \Bigg\{  \big((A,B,C, x), w\big): z = x || w, Az \circ Bz = Cz \Bigg\}
+$$
+
+Here $\circ$ means element-wise product.
+
+This relation is NP-Complete and can be solved by holographic IOP with polynomial queries.
+
+R1CS protocol's prover complexity needs carefully analysing because $d + 1 > |H|$.
+
+The parameters concluded as:
+
+![r1csp](assets/zkp_r1csp.png)
+
+### Polynomial Commitment
+
+Now we still need the help of oracle, which will answer the queries of V. Since all the queries are about polynomial evaluation, we can replace oracle with polynomial commitment scheme.
+
+Compared to normal message commitment scheme, polynomial commitment involves another IP Eval used to prove the commited function $f$'s evaluation $f(y) = z$ is correct.
+
+Design such protocol for arbitrary polynomial would be difficult, but for MLE polynomial, we can represent $f$ as $N$ coefficients corresponding to different terms. A good property of MLE is that for any input, there will only be one term to be $1$, while the others being $0$.
+
+The proof size (aka communication complexity) also matters.
+
+## Side Notes About Complexity Class
+
+(a good reference complexity zoo https://complexityzoo.net/)
+
+**IP = PSPACE** (The class of decision problems solvable by a Turing machine in polynomial space).
+
+**IOP, PCP = NEXP** (solvable by nondet. Turing machine in $2^{n^{O(1)}}$ time)
+
+This lecture note introduces PCP theorem and approximation gaps: https://courses.cs.washington.edu/courses/cse533/05au/pcp-theorem.pdf.
+
+We introduce IOP because the oracle part could be replaced by some special mechanism which will be discussed later, and IOP is easier to understand and use.
+
+Now let's focus on a new problem Rank 1 Constraint Systems (R1CS), which is a fundamentally important problem simply solvable with IOP protocol.
 
 
 
