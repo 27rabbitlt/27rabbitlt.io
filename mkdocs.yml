@@ -10,7 +10,6 @@ extra_javascript:
 - https://polyfill.io/v3/polyfill.min.js?features=es6
 - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 markdown_extensions:
-- callouts
 - nl2br
 - admonition
 - pymdownx.details
@@ -92,7 +91,7 @@ nav:
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
 plugins:
 - search
-# - callouts
+- callouts
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE
