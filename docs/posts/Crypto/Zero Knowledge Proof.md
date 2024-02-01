@@ -1,4 +1,4 @@
-感觉 ZKP 实在是很难用英文写笔记，太累了。。脑子跟不上，还是中文吧。
+复习到哪里写到哪里，可能语言乱飞，逻辑不通，考完慢慢修复。
 
 ## Week 1 Intro & Basic Definition
 
@@ -341,7 +341,13 @@ R_q = \Bigg\{ (\mathbb{G}, G, H, \{A_i\}_{i=1}^{l+1}, p), \{(a_i, r_i)_{i=1}^{l+
 
 Obviously, multiplication protocol, Schnorr protocol are special cases of low degree circuits protocol.
 
-Completeness comes from Pedersen's completeness. SHVZK analysis is similar to multiplication protocol, all commitments are uniformly distributed except the last one could be uniquely determined.
+Completeness comes from Pedersen's completeness. 
+
+SHVZK analysis is similar to multiplication protocol, all commitments are uniformly distributed except the last one could be uniquely determined. 
+
+Normally a polynomial with degree $d$ will have $d + 1$ soundness, the way to prove this is to construct $X \cdot C = Z \cdot G + R \cdot H$, where $X$ denotes matrix of challenges and their powers; $C$ demotes matrix of different commitments; $Z$ denotes matrix of masked value $z_i$; $R$ denotes matrix of randomness; $G, H$ are two group elements. If $X$ is invertible then we can have an opening of commitments $C$, which contains witness.
+
+
 
 ## Week 7 Sumcheck Protocol
 ### 1 Sumcheck Protocol Itself
@@ -483,4 +489,100 @@ We introduce IOP because the oracle part could be replaced by some special mecha
 Now let's focus on a new problem Rank 1 Constraint Systems (R1CS), which is a fundamentally important problem simply solvable with IOP protocol.
 
 
+## NIZK
 
+NIZK without CRS (Common Reference String) is boring because it's in BPP complexity class. So we will only discuss NIZK with CRS.
+
+A non-interactive prof system for an NP relation R consists of three *efficient* algorithms (K, P, V) which are:
+
++ the CRS generator K(1^\lambda) \rightarrow \sigma. K may take |x| or x as input
++ the prover P(\sigma, x, w) \rightarrow \pi
++ the verifier V(\sigma, x, \pi) \rightarrow b
+
+The security definition of non-interactive proofs also have three properties:
+
++ Completeness: $\forall (x, w) \in R, \text{Pr}[b = 1] = 1$. So if $(x, w) in relation, V always accepts.
++ Soundness: $\forall x \notin L_R, \text{Pr}[b = 1] \approx 0$. So if $x$ not in language, V approxiamately always rejects.
++ ZK: Exists two efficient simulators $(S_1, S_2)$ s.t. any adversary $A$ producing $(x, w) \in R$, we have 
+
+$$
+\{(\sigma, \pi): \sigma \leftarrow K(1^\lambda), (x, w) \leftarrow A(\sigma), \pi \leftarrow P(\sigma, x, w)\} = \{(\sigma, \pi): \sigma \leftarrow S_1(1^\lambda), (x, w) \leftarrow A(\sigma), \pi \leftarrow S_2(\sigma, x, w)\}
+$$
+
+The notebable difference is that we now have two simuilators for ZK, the one produces CRS, and the other produces P's message. The important note is that simulator may put a trapdoor into CRS, so V's access to CRS would be manipulated by simulator. Also these are single-theorem definitions, meaning that there are no security guarantees reusing CRS for many $x$.
+
+Also, in definition of knowledge soundness, it needs two extractors, the one outputs CRS and an extraction trapdoor $\xi$; the other outputs witness. But the CRS has to be indistinguishable from normal CRS.
+
+With the help of trapdoor, simulation trapdoors let us produce proofs without knowing witness, breaking soundness; extraction trapdoors let us extract witness from proof, breaking ZK. So it's a big problem that how can we trust the CRS?
+
+We have several approaches to mitigate the risks.
+
+!!! danger "TBD"
+
+Now let's look at an example of NIZK protocol: Boolean Circuit Protocol.
+
+A boolean circuits consists of several boolean gates, WLOG, we only uses NAND gates. The instance is the circuit description, and the witness is satisfying wire values.
+
+Consider function $f(a, b, c) = (a NAND b) == c$, it evaluates to $1$ iff $a + b + 2c - 2 \in \{0, 1\}$. So the proof idea is that we commit to each wire value, then prove each wire value is valid (i.e. $\in \{0, 1\}), then prove $a + b + 2c - 2 \in \{0, 1\}$ for each gates.
+
+Since we cannot directly send wire value to V to check, so we need a commitment scheme with NI bit proofs.
+
+First we need to introduce Boneh-Goh-Nissim Cryptosystem.
+
+BGN protocol is based on two symmetric bilinear groups $\mathbb{G}, \mathbb{G}_T$ of order $n = pq$ where $p,q$ are primes, and $n$ is very large.
+
+Public parameter samples $B \in \mathbb{N} << p$, and all the original messages should be in $[B]$.
+
+Commit scheme is given a message $m \in \{0, \cdots, B - 1\}$ and output $C = m \cdot G + r \cdot H$, where $r$ is sampled in $\mathbb{Z}_n$.
+
+This commit scheme has two modes: binding and hiding.
+
+For binding mode, we have $G \leftarrow \mathbb{G}, s \leftarrow \mathbb{Z}_n^*, H = ps \cdot G$.
+
+For hiding mode, we have $G \leftarrow \mathbb{G}, s \leftarrow \mathbb{Z}_n^*, H = s \cdot G$
+
+The subgroup hiding assumption holds if binding setup and hiding setup are computationally indistinguishable.
+
+If we are using hiding mode, since $H$ is equivalently sampled randomly, the commitment is perfectly hiding, since $C = m \cdot G + r \cdot H$ is uniformly distributed. And by subgroup hiding assumption, biding mode still gives computational hiding.
+
+If we are using binding mode, consider $e(C, q \cdot G) = m \cdot e(G, G) + qr \cdot e(H, G) = m \cdot e(G, G) + pqrs \cdot e(G, G) = m \cdot e(G, G)$. So if there is another message $m'$ breaking binding property, i.e. $m \cdot G + r \cdot H = m = m' \cdot G + r' \cdot H$, then by the same reasoning we have $e(C, q \cdot G) = m' \cdot e(G, G)$. So we have $(m - m') e(G, G) = 0$, which means $m \equiv m'$. Since $B \lll p$, $m = m'$.
+
+Again, by subgroup hiding assumption, hiding mode should also give computational binding.
+
+Now we need to figure out how to prove the committed value is $0$ or $1$. If $C$ is the commitment of $m$, then $C - G$ would be the commitment of $m - 1$. If $m = 0, 1$, then $m(m-1) = 0$.
+
+Pairing is analogous to "multiplication", so we can think about what $e(C, C - G)$ would be.
+
+$$
+e(C, C - G) = e(mG + rH, (m - 1)G + rH) = m(m-1) \cdot e(G,G) + r(2m-1) \cdot e(G, H) + r^2 \cdot e(H, H) = r(2m-1) \cdot e(G, H) + r^2 \cdot e(H, H)
+$$
+
+So we can let V checks if $e(C, C - G) == r(2m-1) \cdot e(G, H) + r^2 \cdot e(H, H)$. To achieve this, we can simply let P send $\pi = r(2m - 1) \cdot G + r^2 \cdot H$, and let V calculates $e(\pi, H)$.
+
+Completeness is obvious by rules of bilinearity and symmetry of group operations.
+
+Soundness is assured, we will show that $m$ could be unquely determined and $m(m-1)=0$ if using binding setup.
+
+Given the commitment $C$, obviously there exists $m_* \in \mathbb{Z}_n$ s.t. $C = m_* \cdot G$. Then let $m = m_* \mod p$ and let $r = \frac{m_* - m}{ps} \mod n$, then with simple calculation we know $C = m \cdot G + r \cdot H$. So we have shown $m$ could be uniquely determined.
+
+Now we need to show such $m$ satisfies $m(m-1) = 0$.
+
+From V's view, what he knows is that $e(C, C - G) = e(\pi, H)$. Note that under binding setup, $q \cdot e(G', H) = 0$, we have $q \cdot e(C, C - G) = q \cdot e(\pi, H) = 0$, also we know $q \cdot e(C, C - G) = q m(m-1) \cdot e(G, G) + qr(2m-1) \cdot e(G, H) + qr^2 \cdot e(H, H)$, thus $qm(m-1) \cdot e(G, G) = 0$, which means $m(m-1) = 0$.
+
+It's almost knowledge sound, because as we have shown, we can extract unique $m$ from $C$ if we have trapdoor $p$ or $q$, but it's not completely knowledge sound, since we can't extract $r$.
+
+It's not ZK, but it has proof uniqueness (i.e. witness indistinguishable). Proof uniqueness means there only exists one possible $\pi$ for each $C$. So as long as for each $C$, P in our whole protocol sends the correct $\pi$, it would be impossible to tell the difference between real $\pi$'s distribution and our P's $\pi$ distribution since there is only one possible $\pi$.
+
+So, with the help of bif proof protocol, we can construct our complete protocol for boolean satisfiability.
+
+Firstly, for each gate's output, we use bit commitment to commit to these wire values.
+
+Then for each gate $(i, j) \rightarrow k$, we need to prove $m_i + m_j + 2m_k - 2 \in \{0, 1\}$, so we commit to $m_i + m_j + 2m_k - 2 \in \{0, 1\}$, but we don't need to really compute the commitment, we can just use $C_i + C_j + 2C_k - 2G$, and this could be calculated by V as well. Then for this gate, we compute corresponding $\pi_{ijk} = r_{ijk}(2m_{ijk} - 1) \cdot G + r_{ijk}^2 \cdot H$, where $r_{ijk}$ is $r_i + r_j + 2 r_k$ and $m_{ijk}$ is $m_i + m_j + 2m_k - 2$.
+
+What V checks is that each $i$ satisfies $e(C_i, C_i - G) = e(\pi_i, H)$ and for each gate the similar check $e(C_{ijk}, C_{ijk} - G) = e(\pi_{ijk}, H).
+
+Completeness and knowledge soundness follow from completeness and soundness of bit proof system.
+
+Under hiding setup, we can easily construct two simulators, the one produces CRS with trapdoor $p$ or $q$, and the other one firstly assume each wire value is $0$ and generates $C_i, \pi_i$. Then for each gate $(i, j) \rightarrow k$, we open the commitment $C_k$ as $C_k = 1 \cdot G + r' \cdot H$, we can do such opening because under hiding setup, it's equivocable with key $s$, which means it can be opened to any messages by letting $r' - r = \frac{m - m'}{s} \mod n$. Doing such opening let us easily calculate $\pi_{ijk}$.
+
+ZK because each $C_i$ is uniformly distributed, and $\pi, \pi_{ijk}$ are uniquely determined by $C_i$ so it's indistinguishable.
