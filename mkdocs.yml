@@ -91,7 +91,7 @@ nav:
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
 plugins:
 - search
-- callouts
+# - callouts
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE

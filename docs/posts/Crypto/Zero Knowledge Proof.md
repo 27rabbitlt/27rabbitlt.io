@@ -579,10 +579,24 @@ Firstly, for each gate's output, we use bit commitment to commit to these wire v
 
 Then for each gate $(i, j) \rightarrow k$, we need to prove $m_i + m_j + 2m_k - 2 \in \{0, 1\}$, so we commit to $m_i + m_j + 2m_k - 2 \in \{0, 1\}$, but we don't need to really compute the commitment, we can just use $C_i + C_j + 2C_k - 2G$, and this could be calculated by V as well. Then for this gate, we compute corresponding $\pi_{ijk} = r_{ijk}(2m_{ijk} - 1) \cdot G + r_{ijk}^2 \cdot H$, where $r_{ijk}$ is $r_i + r_j + 2 r_k$ and $m_{ijk}$ is $m_i + m_j + 2m_k - 2$.
 
-What V checks is that each $i$ satisfies $e(C_i, C_i - G) = e(\pi_i, H)$ and for each gate the similar check $e(C_{ijk}, C_{ijk} - G) = e(\pi_{ijk}, H).
+What V checks is that each $i$ satisfies $e(C_i, C_i - G) = e(\pi_i, H)$ and for each gate the similar check $e(C_{ijk}, C_{ijk} - G) = e(\pi_{ijk}, H)$.
 
 Completeness and knowledge soundness follow from completeness and soundness of bit proof system.
 
 Under hiding setup, we can easily construct two simulators, the one produces CRS with trapdoor $p$ or $q$, and the other one firstly assume each wire value is $0$ and generates $C_i, \pi_i$. Then for each gate $(i, j) \rightarrow k$, we open the commitment $C_k$ as $C_k = 1 \cdot G + r' \cdot H$, we can do such opening because under hiding setup, it's equivocable with key $s$, which means it can be opened to any messages by letting $r' - r = \frac{m - m'}{s} \mod n$. Doing such opening let us easily calculate $\pi_{ijk}$.
 
 ZK because each $C_i$ is uniformly distributed, and $\pi, \pi_{ijk}$ are uniquely determined by $C_i$ so it's indistinguishable.
+
+## R1CS as polynomial divisibility
+
+Let's define *Lagrange* polynomials on set $H$ defined for $w \in H$, by:
+
+$$
+L_{w, H}(x) = \Pi_{w' \in H \setminus \{w\}} \frac{x - w'}{w - w'}
+$$
+
+This polynomial has degree $|H| - 1$, and it could be understood in this way: $L_{w, H}(x) = (x == w)$.
+
+The *vanishing* polynomial on $H$ is defined as $v_H(x) = \Pi_{w \in H}(x - w)$.
+
+It's called vanishing polynomial because if $f(x) = 0, \; \forall x \in H$, then we have $v_H(x) | f(x)$.
