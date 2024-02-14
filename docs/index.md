@@ -10,7 +10,7 @@ The communities I'm currently focusing on:
 
 
 ## INTERESTS
-I have a wide range of interests.
+I have a wide range of interests. Combinatorics, number theory, system & architecture, cryptography, etc.. 
 
 
 ## LANGUAGES & SKILLS
