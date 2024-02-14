@@ -1,6 +1,6 @@
 <a href="https://27rabbitlt.github.io/" target="_blank"><img src="https://s2.loli.net/2022/10/29/18ZgLzKGpmIV5NJ.jpg" ></a>
 ## HELLO WORLD 🐰
-It's @27rabbitlt speaking, an undergraduate student in Zhejiang University learning Computer Science. I'm looking forward to getting further education in Switzerland or England. Totally new to open source communities, but willing to make as much contribution as I can.
+It's @27rabbitlt speaking, a master student at ETH Zurich, majoring at Theorectical Computer Science. Totally new to open source communities, but willing to make as much contribution as I can. Also I'll try my best to spend my whole life to become a mathematician.
 
 The communities I'm currently focusing on:
 

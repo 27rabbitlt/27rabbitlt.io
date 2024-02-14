@@ -86,12 +86,14 @@ nav:
     - Burnside's_Lemma: posts/MATH/Combinatorial_Maths/Burnside's_Lemma.md
   - Linear_Algebra:
     - Chpater 3: posts/MATH/Linear_Algebra/Chpater 3.md
+  - AMC: posts/MATH/AMC.md
+- MISC:
+  - working_setting: posts/MISC/working_setting.md
 - About:
   - About: posts/About/index.md
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
 plugins:
 - search
-# - callouts
 repo_name: 27rabbitlt pages
 repo_url: https://github.com/27rabbitlt/27rabbitlt.github.io
 site_name: RABBIT HOLE
