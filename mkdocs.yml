@@ -87,11 +87,15 @@ nav:
   - Linear_Algebra:
     - Chpater 3: posts/MATH/Linear_Algebra/Chpater 3.md
   - AMC: posts/MATH/AMC.md
+  - AdvancedFormalLanguageTheory: posts/MATH/AdvancedFormalLanguageTheory.md
+  - TDA: posts/MATH/TDA.md
+  - AbstractAlgebra: posts/MATH/AbstractAlgebra.md
 - MISC:
   - working_setting: posts/MISC/working_setting.md
 - About:
   - About: posts/About/index.md
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
+  - Master Courses: posts/About/Master Courses.md
 plugins:
 - search
 repo_name: 27rabbitlt pages
