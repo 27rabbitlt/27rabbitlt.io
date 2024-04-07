@@ -4,6 +4,9 @@
 
 Important definitions on section 3.2.3
 
++ $\Pi^n(i, j)$: paths from $i$ to $j$ with exactly $n$ edges
++ $\Pi^{(n)}(i, j)$: paths from $i$ to $j$ with no more than $n$ edges
+
 ### 2.1 Intersection
 
 #### 2.1.1 Non-epsilon transition
@@ -58,8 +61,14 @@ It's easy to check that we can naturally define corresponding matrix addition an
 
 The Kleene star and matrix exponent on matrix semiring can be interpreted as complete path sum and path sum of a specific length.
 
-However, note that closeness of original semiring doesn't guarantee closeness of induced matrix semiring.
+However, note that closeness of original semiring **doesn't** guarantee closeness of induced matrix semiring. So we further define a **commutative** semiring $W$ is **k-closed for graph $G$** if for any cycle $\pi$ in $G$ it holds that:
 
+$$
+\bigoplus_{i=0}^{k+1} w(\pi) = \bigoplus_{i=1}^{k} w(\pi)
+$$
+
+We requires the semiring to be commutative because we want weight of a cycle not to depend on the node we enter in.
+A}
 
 
 
