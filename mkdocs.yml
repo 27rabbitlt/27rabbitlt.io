@@ -69,6 +69,7 @@ nav:
     - KMP: posts/ALGO/Competitive_Contest/KMP.md
     - Minimize_The_Number_of_Swaps_to_Sort_List: posts/ALGO/Competitive_Contest/Minimize_The_Number_of_Swaps_to_Sort_List.md
     - Sieve of Euler: posts/ALGO/Competitive_Contest/Sieve of Euler.md
+  - RandomizedIncrementalAlgo: posts/ALGO/RandomizedIncrementalAlgo.md
 - CPP:
   - CPP: posts/CPP/index.md
   - CRTP: posts/CPP/CRTP.md
@@ -92,6 +93,7 @@ nav:
   - AbstractAlgebra: posts/MATH/AbstractAlgebra.md
 - MISC:
   - working_setting: posts/MISC/working_setting.md
+  - latex_tips: posts/MISC/latex_tips.md
 - About:
   - About: posts/About/index.md
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
