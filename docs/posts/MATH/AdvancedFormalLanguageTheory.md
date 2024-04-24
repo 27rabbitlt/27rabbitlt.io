@@ -41,7 +41,7 @@ Obviously we can use topological sort to calculate the path sum with time comple
 
 There might be cycles in non-acyclic graph, which means there would be infinitely many paths in automaton. Then here is the problem: how do we calculate path sum, it might not even converge?
 
-To make sure such *sum* exists, we further require closed semiring to have a new operation **Kleene star** defined as:
+To make sure such *sum* exists, we further require closed semiring to have a new unary operation **Kleene star** defined as:
 
 !!! note "Kleene star"
     Kleene star operation must satisfy following two axioms:
