@@ -76,6 +76,7 @@ nav:
   - Further Read: posts/CPP/Further Read.md
   - UB:
     - infinite_loop: posts/CPP/UB/infinite_loop.md
+  - Concurrency: posts/CPP/Concurrency.md
 - MATH:
   - MATH: posts/MATH/index.md
   - FFT: posts/MATH/FFT.md
