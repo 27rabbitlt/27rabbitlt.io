@@ -22,7 +22,19 @@ So the base is a subset of $O$ but can construct every open set by appropriate u
 
 For our old friend Euclidean space $R$, we can give a base using rational number and open balls: $\mathcal{B} = \{B(x, 1/p) | x \in \mathbb{Q}, p \in \mathbb{N}_+\}$
 
-## 1 Homotopy 同伦
+### 0.3 Closure, Boundary, Interior, and Limit Point
+
+*Closure* of a set $A$ is the smallest (or the intersection of all) close sets that contains $A$.
+
+*Interior* of a set $A$ is the biggest (or the union of all) open sets that is contained in $A$.
+
+*Boundary* is closure mod interiror.
+
+A point $p$ is *limit point* of a set $A$ if every open set that contains $p$ intersects with $A$. 
+
+Note that this definition of boundary is different from what we will see of the simplex chain. However the definition of boundary of manifold is consistent with that of simplex chain. The boundary of a $d$-dim manifold is all the points whose neighbourhood is homeomorphic to half-ball $H^d$, while interiror is these whose neighbourhood is homeomorphic to an open ball $B^d$.
+
+## 1 Homotopy 同伦 
 
 Homotopy is actually between two maps. A *homotopy* connecting between maps $g, h: X \rightarrow Y$ is a map $H: X \times [0,1] \rightarrow Y$ such that $H(\cdot, 0) = g, H(\cdot, 1) = h$. In this case $g$ and $h$ are called homotopic.
 
