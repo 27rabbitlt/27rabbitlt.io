@@ -64,11 +64,11 @@ nav:
   - ALGO: posts/ALGO/index.md
   - MST_survey: posts/ALGO/MST_survey.md
   - Competitive_Contest:
-    - Connectivity - Strongly Connected Component: posts/ALGO/Competitive_Contest/Connectivity
-        - Strongly Connected Component.md
     - KMP: posts/ALGO/Competitive_Contest/KMP.md
     - Minimize_The_Number_of_Swaps_to_Sort_List: posts/ALGO/Competitive_Contest/Minimize_The_Number_of_Swaps_to_Sort_List.md
     - Sieve of Euler: posts/ALGO/Competitive_Contest/Sieve of Euler.md
+    - Strongly Connected Component: posts/ALGO/Competitive_Contest/Strongly Connected
+        Component.md
   - RandomizedIncrementalAlgo: posts/ALGO/RandomizedIncrementalAlgo.md
 - CPP:
   - CPP: posts/CPP/index.md
@@ -92,6 +92,8 @@ nav:
   - AdvancedFormalLanguageTheory: posts/MATH/AdvancedFormalLanguageTheory.md
   - TDA: posts/MATH/TDA.md
   - AbstractAlgebra: posts/MATH/AbstractAlgebra.md
+  - Complexity:
+    - Ladner Theorem: posts/MATH/Complexity/Ladner Theorem.md
 - MISC:
   - working_setting: posts/MISC/working_setting.md
   - latex_tips: posts/MISC/latex_tips.md

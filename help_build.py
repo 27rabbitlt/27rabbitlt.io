@@ -8,19 +8,15 @@ import sys
 def pjoin(*path_list):
     return "/".join(path_list)
 
-# get md files under this position, position has to be a Path
+# get md files name under this position, position has to be a Path
 def get_mdfiles(position):
-    files = position.glob('*.md')
-    files = [item.name for item in files]
-    return files
+    return [item.name for item in position.glob('*.md')]
     
 # get directories under this position, postition has to be a Path
 # ignore some names
 dir_ignore = ["assets"]
 def get_dirs(position):
-    dirs = [item for item in position.iterdir() if item.is_dir()]
-    dirs = [item.name for item in dirs if item.name not in dir_ignore]
-    return dirs
+    return [item.name for item in position.iterdir() if item.is_dir() and item.name not in dir_ignore]
 
 # recursively list the file and generate mkdocs.yml
 # you can set the order when order = 1
