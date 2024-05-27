@@ -21,3 +21,22 @@ We call a child heavy if it's the one with the largest child subtree, otherwise 
 Compared with classical DFS algo, the only difference is that light child would be gone through one more time, so each node $v$ would be went through $l + 1$ times, where $l$ is the number of light child along the path from $v$ to root of tree.
 
 There can't be more than $\logn$ light children in a path starting from root.
+
+Another conflict that might occur in common tree traversal algo is that if each needs an array to store the result, then each time we go into a child node, we either clear the array or create a new one for child. If each child has an array that's also catastrophic.
+
+While using DSU on Tree it's enough to have only one array, since each time we can manually clean the array.
+
+In summary we divide tasks into two parts:
+
+1. update array (+-1)
+2. [optional] update parent answer
+
+And DFS has an additional argument `keep` indicating whether to keep the array.
+
+Firstly we run non-keep DFS on light children.
+
+Then we run keep DFS on heavy child.
+
+Then for each light child we update answer and update array.
+
+Finally depending on current DFS is keep or non-keep, keep/remove current array value. Removal can be done also recursively.
