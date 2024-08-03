@@ -69,7 +69,9 @@ nav:
     - Sieve of Euler: posts/ALGO/Competitive_Contest/Sieve of Euler.md
     - Strongly Connected Component: posts/ALGO/Competitive_Contest/Strongly Connected
         Component.md
+    - DSU_On_Tree: posts/ALGO/Competitive_Contest/DSU_On_Tree.md
   - RandomizedIncrementalAlgo: posts/ALGO/RandomizedIncrementalAlgo.md
+  - Dilworth: posts/ALGO/Dilworth.md
 - CPP:
   - CPP: posts/CPP/index.md
   - CRTP: posts/CPP/CRTP.md
@@ -97,6 +99,7 @@ nav:
 - MISC:
   - working_setting: posts/MISC/working_setting.md
   - latex_tips: posts/MISC/latex_tips.md
+  - eride_worktips: posts/MISC/eride_worktips.md
 - About:
   - About: posts/About/index.md
   - Bachelor Courses Description: posts/About/Bachelor Courses Description.md
