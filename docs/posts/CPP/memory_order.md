@@ -83,4 +83,31 @@ But, StoreLoad re-ordering is still possible: https://github.com/27rabbitlt/memo
 
 Another interesting demo that shows some re-ordering won't happen on x86 but will on ARM is: https://github.com/27rabbitlt/memory_order_test_demo/blob/main/test_arm_store_load_reorder.cpp
 
+Let's look at this snippet:
+
+```C++
+void increase1000000() {
+    int count = 0;
+    while (count < 10000000) {
+        int expected = 0;
+        if (flag.compare_exchange_strong(expected, 1, std::memory_order_relaxed)) {
+            sharedVar++;
+            flag.store(0, std::memory_order_relaxed);
+            count++;
+        }
+    }
+}
+```
+When two threads executing this function at the same time on ARM platform, Apple Silcon for example, it's possible that the final result of `sharedVar` is not 2000000.
+
+Here `sharedVar` is a shared variable and `flag` is an atomic integer.
+
+This piece of code intends to achieve the same functionality as a mutex lock without using any kind of lock. So here flag is like a mutex variable, and it is partially true that at the same time there will be only one thread to be able to get in this `if` statement. 
+
+Wait, it's only partially true, why?
+
+In fact, it's possible for ARM CPU to swap the Store of `flag.store(0)` and `sharedVar++`. So it might happen, though with low probability, that `flag` has already been set to 0 but the shared variable hasn't been changed, thus the modification of shared variable might be covered.
+
+
+
 TBD: explain why it will happen on arm but won't do on x86.
