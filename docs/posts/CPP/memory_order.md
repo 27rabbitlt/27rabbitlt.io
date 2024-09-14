@@ -107,7 +107,3 @@ This piece of code intends to achieve the same functionality as a mutex lock wit
 Wait, it's only partially true, why?
 
 In fact, it's possible for ARM CPU to swap the Store of `flag.store(0)` and `sharedVar++`. So it might happen, though with low probability, that `flag` has already been set to 0 but the shared variable hasn't been changed, thus the modification of shared variable might be covered.
-
-
-
-TBD: explain why it will happen on arm but won't do on x86.
