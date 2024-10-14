@@ -70,6 +70,8 @@ nav:
     - Strongly Connected Component: posts/ALGO/Competitive_Contest/Strongly Connected
         Component.md
     - DSU_On_Tree: posts/ALGO/Competitive_Contest/DSU_On_Tree.md
+    - CF:
+      - cf1672H: posts/ALGO/Competitive_Contest/CF/cf1672H.md
   - RandomizedIncrementalAlgo: posts/ALGO/RandomizedIncrementalAlgo.md
   - Dilworth: posts/ALGO/Dilworth.md
 - CPP:
@@ -79,6 +81,7 @@ nav:
   - UB:
     - infinite_loop: posts/CPP/UB/infinite_loop.md
   - Concurrency: posts/CPP/Concurrency.md
+  - memory_order: posts/CPP/memory_order.md
 - MATH:
   - MATH: posts/MATH/index.md
   - FFT: posts/MATH/FFT.md
