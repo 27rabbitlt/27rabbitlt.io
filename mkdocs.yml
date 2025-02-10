@@ -60,6 +60,7 @@ nav:
   - Zero Knowledge Proof: posts/Crypto/Zero Knowledge Proof.md
   - RSA: posts/Crypto/RSA.md
   - Further_Read: posts/Crypto/Further_Read.md
+  - Certificate_and_Sign: posts/Crypto/Certificate_and_Sign.md
 - ALGO:
   - ALGO: posts/ALGO/index.md
   - MST_survey: posts/ALGO/MST_survey.md
@@ -74,6 +75,7 @@ nav:
       - cf1672H: posts/ALGO/Competitive_Contest/CF/cf1672H.md
   - RandomizedIncrementalAlgo: posts/ALGO/RandomizedIncrementalAlgo.md
   - Dilworth: posts/ALGO/Dilworth.md
+  - NetworkFlow: posts/ALGO/NetworkFlow.md
 - CPP:
   - CPP: posts/CPP/index.md
   - CRTP: posts/CPP/CRTP.md
